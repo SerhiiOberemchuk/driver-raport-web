@@ -1,16 +1,16 @@
-import Image from "next/image";
 import styles from "./page.module.css";
 import Link from "next/link";
 import { ImAddressBook } from "react-icons/im";
 import { FaCarRear } from "react-icons/fa6";
 import { TbReport } from "react-icons/tb";
+import { lusitana } from "../ui/fonts";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
+    <section className={styles.main}>
       <div className={styles.description}>
         <div>
-          <p>Created By OBEREMCHUK</p>
+          <p className={lusitana.className}>Created By OBEREMCHUK</p>
         </div>
       </div>
 
@@ -38,6 +38,6 @@ export default function Home() {
           </span>
         </Link>
       </div>
-    </main>
+    </section>
   );
 }

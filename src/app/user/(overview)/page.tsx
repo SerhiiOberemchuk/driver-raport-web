@@ -1,12 +1,12 @@
 import React from "react";
-import style from "../page.module.css";
+import Container from "@/components/container";
 
 type Props = {};
 
 export default function RepotPage({}: Props) {
   return (
-    <main className={style.main}>
+    <Container>
       <h1>autista</h1>
-    </main>
+    </Container>
   );
 }
