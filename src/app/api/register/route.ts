@@ -3,11 +3,9 @@ import { NextResponse } from "next/server";
 import * as bcrypt from "bcrypt";
 
 export async function POST(request: Request) {
-  console.log("register start");
-
   try {
     const body = await request.json();
-    const { email, password } = body;
+    const { email, password, name, surname } = body;
 
     if (!email || !password)
       return NextResponse.json(
@@ -30,13 +28,13 @@ export async function POST(request: Request) {
     const insertedObject = await userColection.insertOne({
       email,
       password: hashPassword,
+      name,
+      surname,
     });
 
     const newDriver = await userColection.findOne({
       _id: insertedObject.insertedId,
     });
-
-    console.log(newDriver);
 
     return NextResponse.json({
       message: "Driver registered successfuly",

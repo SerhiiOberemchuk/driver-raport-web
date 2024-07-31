@@ -4,6 +4,7 @@ export interface User {
   email?: string | null;
   image?: string | null;
   password?: string | null;
+  surname?: string | null;
 }
 
 export const MONGODB_NAME = {
