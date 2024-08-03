@@ -34,7 +34,9 @@
     #00000080
   );
 
-  --callout-rgb: 238, 240, 241;
+  --color-icon-hover: rgb(215, 157, 11);
+  /* --callout-rgb: 238, 240, 241; */
+  --callout-rgb: 100, 100, 200;
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
@@ -85,7 +87,7 @@ body {
   overflow-x: hidden;
 }
 
-body {
+/* body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -93,7 +95,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
+} */
 
 a {
   color: inherit;

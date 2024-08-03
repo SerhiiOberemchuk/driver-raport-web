@@ -1,53 +1,41 @@
 import type { Metadata } from "next";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
-import Link from "next/link";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/nextjs";
 import "./globals.css";
 import styles from "./page.module.css";
-import { inter, lusitana } from "../ui/fonts";
-import { FaHome } from "react-icons/fa";
+import { inter } from "../ui/fonts";
+import { StoreProvider } from "./StoreProvider";
+import Header from "@/components/Header/Header";
 
 export const metadata: Metadata = {
   title: "My deily repert",
   description: "Allow to seve your work",
 };
 
+interface RootLayoutProps {
+  children: React.ReactNode;
+  userdata: React.ReactNode;
+}
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+  userdata,
+}: RootLayoutProps) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <main>
-            <header className={styles.description}>
-              <div className={styles.descriptionHeader}>
-                <p className={lusitana.className}></p>
-                <Link href={"/"} className={styles.card}>
-                  <FaHome />
-                </Link>
+    <StoreProvider>
+      <ClerkProvider>
+        <html lang="en">
+          <body className={inter.className}>
+            <Header>{userdata}</Header>
+            <main className={styles.mainLayout}>
+              <SignedIn>{children}</SignedIn>
+              <SignedOut>
                 <div>
-                  <SignedOut>
-                    <SignInButton />
-                  </SignedOut>
-                  <SignedIn>
-                    <UserButton />
-                  </SignedIn>
+                  <h1>You must login!!!</h1>
                 </div>
-              </div>
-            </header>
-
-            {children}
-          </main>
-        </body>
-      </html>
-    </ClerkProvider>
+              </SignedOut>
+            </main>
+          </body>
+        </html>
+      </ClerkProvider>
+    </StoreProvider>
   );
 }
