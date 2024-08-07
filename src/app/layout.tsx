@@ -5,6 +5,7 @@ import styles from "./page.module.css";
 import { inter } from "../ui/fonts";
 import { StoreProvider } from "./StoreProvider";
 import Header from "@/components/Header/Header";
+import Modal from "@/components/ModalWindows/ModalWindows";
 
 export const metadata: Metadata = {
   title: "My deily repert",
@@ -13,18 +14,14 @@ export const metadata: Metadata = {
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  userdata: React.ReactNode;
 }
-export default async function RootLayout({
-  children,
-  userdata,
-}: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <StoreProvider>
       <ClerkProvider>
         <html lang="en">
           <body className={inter.className}>
-            <Header>{userdata}</Header>
+            <Header />
             <main className={styles.mainLayout}>
               <SignedIn>{children}</SignedIn>
               <SignedOut>
@@ -33,6 +30,7 @@ export default async function RootLayout({
                 </div>
               </SignedOut>
             </main>
+            <Modal />
           </body>
         </html>
       </ClerkProvider>

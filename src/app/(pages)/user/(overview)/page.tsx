@@ -9,10 +9,8 @@ type Props = {};
 export default function RepotPage({}: Props) {
   return (
     <Container>
-      <div>
-        <SelectUserVehicle />
-        <FormInputTrack />
-      </div>
+      <SelectUserVehicle />
+      <FormInputTrack />
     </Container>
   );
 }

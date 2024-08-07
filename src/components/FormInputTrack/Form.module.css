@@ -1,4 +1,6 @@
 .form {
+  width: 100%;
+  max-width: 400px;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -6,4 +8,7 @@
 }
 .title {
   margin-top: 100px;
+}
+.errors {
+  color: red;
 }

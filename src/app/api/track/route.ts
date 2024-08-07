@@ -41,6 +41,7 @@ export async function POST(request: Request) {
     await collectionTracks.insertOne({
       licensePlateNumber,
       type,
+      users: [],
     });
 
     const vehicles = await collectionTracks.find({}).toArray();

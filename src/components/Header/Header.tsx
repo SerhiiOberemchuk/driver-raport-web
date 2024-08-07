@@ -13,17 +13,18 @@ import {
 
 import styles from "./Header.module.css";
 import Loader from "../Loader/Loader";
+import UserData from "../ShowUserData/userData";
 
-type Props = { children: React.ReactNode };
+type Props = {};
 
-const Header = ({ children }: Props) => {
+const Header = ({}: Props) => {
   return (
     <header className={styles.description}>
       <div className={styles.descriptionHeader}>
         <Link href={"/"} className={styles.card}>
           <FaHome size={28} className={styles.iconHome} />
         </Link>
-        {children}
+        <UserData />
         <div>
           <ClerkLoading>
             <Loader width={28} height={28} />

@@ -38,8 +38,16 @@ export const optionSelectType = [
 ];
 
 export type VehicleType = keyof typeof VEHICLE_TYPE;
-
+export interface VehicleUser {
+  userId: string;
+  userFullName: string;
+  dateStart?: Date;
+  dateFinish?: Date;
+}
 export type Vehicle = {
+  isUse: boolean;
+  _id: string;
   type: VehicleType;
   licensePlateNumber: string;
+  users: VehicleUser[] | [];
 };

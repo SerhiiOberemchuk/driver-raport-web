@@ -44,7 +44,7 @@ export const trackSlice = createAppSlice({
       }
     ),
     addNewVehicleAsync: create.asyncThunk(
-      async ({ type, licensePlateNumber }: Vehicle) => {
+      async ({ type, licensePlateNumber }: Partial<Vehicle>) => {
         const data = await addNewVehicle({ type, licensePlateNumber });
         return data;
       },
