@@ -74,7 +74,7 @@ const FormInputTrack = (props: Props) => {
           ))}
         </select>
         {errors.type && (
-          <span className={style.errors}>"Scegli tipo di mezoo"</span>
+          <span className={style.errors}>Scegli tipo di mezoo</span>
         )}
         <button type="submit">
           {isLoader ? <Loader width={20} height={20} /> : <span>Ok</span>}

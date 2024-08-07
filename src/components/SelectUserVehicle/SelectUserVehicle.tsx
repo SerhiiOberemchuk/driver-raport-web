@@ -48,15 +48,15 @@ function SelectUserVehicle({}: Props) {
 
   const typeTrack = useMemo(
     () => tracks?.filter((item) => item.type === VEHICLE_TYPE.track),
-    [tracks] || []
+    [tracks]
   );
   const typeTrailer = useMemo(
     () => tracks?.filter((item) => item.type === VEHICLE_TYPE.trailer),
-    [tracks] || []
+    [tracks]
   );
   const typeFurgone = useMemo(
     () => tracks?.filter((item) => item.type === VEHICLE_TYPE.furgone),
-    [tracks] || []
+    [tracks]
   );
   return (
     <form
