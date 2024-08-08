@@ -1,4 +1,5 @@
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
+import { collectionDb, dataBase } from "@/types/mongoDbTypes";
 import { MongoClient, ServerApiVersion } from "mongodb";
 
 if (!process.env.MONGODB_URI) {
@@ -35,3 +36,12 @@ if (process.env.NODE_ENV === "development") {
 // Export a module-scoped MongoClient. By doing this in a
 // separate module, the client can be shared across functions.
 export default client;
+
+export const getCollectionDb = async (
+  DbName: dataBase,
+  collectionName: collectionDb
+) => {
+  const db = await client.db(DbName);
+  const collection = await db.collection(collectionName);
+  return collection;
+};

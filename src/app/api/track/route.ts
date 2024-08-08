@@ -1,16 +1,10 @@
-import client from "@/lib/mongodb";
-import {
-  MONGODB_COLLECTIONS,
-  MONGODB_NAME,
-  Vehicle,
-  VEHICLE_TYPE,
-} from "@/types/types";
+import client, { getCollectionDb } from "@/lib/mongodb";
+import { Vehicle, VEHICLE_TYPE } from "@/types/types";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const db = await client.db(MONGODB_NAME.DbName);
-    const collectionTracks = db.collection(MONGODB_COLLECTIONS.vehicle);
+    const collectionTracks = await getCollectionDb("my-deliveries", "vehicle");
 
     const vehicles = await collectionTracks.find({}).toArray();
     if (!vehicles || vehicles.length === 0) {
@@ -36,8 +30,8 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const db = await client.db(MONGODB_NAME.DbName);
-    const collectionTracks = await db.collection(MONGODB_COLLECTIONS.vehicle);
+
+    const collectionTracks = await getCollectionDb("my-deliveries", "vehicle");
     await collectionTracks.insertOne({
       licensePlateNumber,
       type,

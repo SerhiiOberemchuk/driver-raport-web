@@ -7,19 +7,6 @@ export interface User {
   surname?: string | null;
 }
 
-export const MONGODB_NAME = {
-  DbName: "my-deliveries",
-};
-
-export const MONGODB_COLLECTIONS = {
-  Users: "Users",
-  Accounts: "Accounts",
-  Sessions: "Sessions",
-  VerificationTokens: "VerificationTokens",
-  deliveries: "deliveries",
-  vehicle: "vehicle",
-};
-
 export const VEHICLE_TYPE = {
   track: "track",
   trailer: "trailer",
@@ -49,5 +36,5 @@ export type Vehicle = {
   _id: string;
   type: VehicleType;
   licensePlateNumber: string;
-  users: VehicleUser[] | [];
+  users: VehicleUser[];
 };

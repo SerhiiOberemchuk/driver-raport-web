@@ -1,10 +1,5 @@
-import client from "@/lib/mongodb";
-import {
-  MONGODB_COLLECTIONS,
-  MONGODB_NAME,
-  Vehicle,
-  VehicleUser,
-} from "@/types/types";
+import { getCollectionDb } from "@/lib/mongodb";
+import { Vehicle, VehicleUser } from "@/types/types";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
@@ -16,10 +11,13 @@ export async function PATCH(request: Request, { params }: RequestParams) {
   try {
     const vehicleId = new ObjectId(params.id);
     const body = await request.json();
-    const { isUse, userData }: { isUse: boolean; userData: VehicleUser } = body;
+    const { isUse, userData }: { isUse: Vehicle; userData: VehicleUser } = body;
     const { userFullName, dateFinish, dateStart, userId } = userData;
-    const db = await client.db(MONGODB_NAME.DbName);
-    const collectionVehicles = await db.collection(MONGODB_COLLECTIONS.vehicle);
+
+    const collectionVehicles = await getCollectionDb(
+      "my-deliveries",
+      "vehicle"
+    );
 
     const finedVehicle = await collectionVehicles.findOne({ _id: vehicleId });
 
@@ -38,14 +36,14 @@ export async function PATCH(request: Request, { params }: RequestParams) {
     }
 
     if (isUse) {
-      const updetedData: Partial<VehicleUser> = { userFullName, userId };
-      if (dateStart) updetedData.dateStart = dateStart;
+      const updetedData = { userFullName, userId, dateStart };
+      //   if (dateStart) updetedData.dateStart = dateStart;
 
       const updatedVehicle = await collectionVehicles.findOneAndUpdate(
         {
           _id: vehicleId,
         },
-        { $set: { isUse: isUse }, $push: { users: updetedData } },
+        // { $set: { isUse: isUse }, $push: { users: updetedData } },
 
         {
           returnDocument: "after",
