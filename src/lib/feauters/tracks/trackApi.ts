@@ -1,3 +1,4 @@
+import { VehicleUser } from "@/models/vehicleModel";
 import { Vehicle } from "@/types/types";
 import axios from "axios";
 
@@ -38,23 +39,16 @@ interface Request {
   id: string;
   data: {
     isUse: boolean;
-    userData: {
-      userId: string;
-      userFullName: string;
-      dateStart?: Date;
-      dateFinish?: Date;
-    };
+    userData: VehicleUser;
   };
 }
 export const addNewDataTrack = async ({ id, data }: Request) => {
   try {
     const response = await axios.patch(`api/track/${id}`, data);
-    return response.data;
+    console.log(response);
+
+    return response.data.vehicles;
   } catch (error) {
-    if (error instanceof Error) {
-      return error.message;
-    } else {
-      return { error: "An unexpected error occurred" };
-    }
+    return error;
   }
 };

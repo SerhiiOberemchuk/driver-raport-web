@@ -1,6 +1,5 @@
 export const MONGODB_NAME = {
   DbName: "my-deliveries",
-  second: "ddvdvdv",
 } as const;
 
 export const MONGODB_COLLECTIONS = {

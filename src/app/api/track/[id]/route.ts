@@ -1,5 +1,6 @@
-import { getCollectionDb } from "@/lib/mongodb";
-import { Vehicle, VehicleUser } from "@/types/types";
+import { connectDB } from "@/lib/mongodb";
+import VehicleModel from "@/models/vehicleModel";
+import Vehicle, { VehicleUser } from "@/models/vehicleModel";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
@@ -9,21 +10,17 @@ interface RequestParams {
 
 export async function PATCH(request: Request, { params }: RequestParams) {
   try {
+    await connectDB();
     const vehicleId = new ObjectId(params.id);
     const body = await request.json();
-    const { isUse, userData }: { isUse: Vehicle; userData: VehicleUser } = body;
+    const { isUse, userData }: { isUse: string; userData: VehicleUser } = body;
     const { userFullName, dateFinish, dateStart, userId } = userData;
 
-    const collectionVehicles = await getCollectionDb(
-      "my-deliveries",
-      "vehicle"
-    );
-
-    const finedVehicle = await collectionVehicles.findOne({ _id: vehicleId });
+    const finedVehicle = await VehicleModel.findById(params.id);
 
     if (!finedVehicle) {
       return NextResponse.json(
-        { message: "Not found vehicle" },
+        { message: "Not found vehicle", finedVehicle },
         { status: 404 }
       );
     }
@@ -31,33 +28,17 @@ export async function PATCH(request: Request, { params }: RequestParams) {
     if (finedVehicle.isUse && isUse) {
       return NextResponse.json(
         { message: `Vehicle are using ` },
-        { status: 401 }
+        { status: 403 }
       );
     }
 
     if (isUse) {
-      const updetedData = { userFullName, userId, dateStart };
-      //   if (dateStart) updetedData.dateStart = dateStart;
-
-      const updatedVehicle = await collectionVehicles.findOneAndUpdate(
-        {
-          _id: vehicleId,
-        },
-        // { $set: { isUse: isUse }, $push: { users: updetedData } },
-
-        {
-          returnDocument: "after",
-        }
-      );
-      console.log("pickUp", updatedVehicle);
-      if (!updatedVehicle) {
-        return NextResponse.json(
-          { message: "Vehicle update failed" },
-          { status: 500 }
-        );
-      }
+      const updatedVehicle = await VehicleModel.findById(params.id);
+      updatedVehicle.isUse = isUse;
+      updatedVehicle.users.push({ userFullName, dateStart, userId });
+      await updatedVehicle.save();
     } else {
-      const updatedVehicle = await collectionVehicles.findOneAndUpdate(
+      const updatedVehicle = await VehicleModel.findOneAndUpdate(
         {
           _id: vehicleId,
           users: {
@@ -69,13 +50,9 @@ export async function PATCH(request: Request, { params }: RequestParams) {
             isUse: isUse,
             "users.$.dateFinish": dateFinish,
           },
-        },
-
-        {
-          returnDocument: "after",
         }
       );
-      console.log("put", updatedVehicle);
+
       if (!updatedVehicle) {
         return NextResponse.json(
           { message: "With present vehicle you have not open delivery" },
@@ -84,12 +61,8 @@ export async function PATCH(request: Request, { params }: RequestParams) {
       }
     }
 
-    console.log("after all");
-
-    const updatedVehicles = await collectionVehicles.find({}).toArray();
-    console.log("updatedVehicles>>", updatedVehicles);
-
-    return NextResponse.json(updatedVehicles, { status: 200 });
+    const vehicles = await Vehicle.find();
+    return NextResponse.json({ vehicles }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message });
   }

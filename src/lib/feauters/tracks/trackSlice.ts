@@ -1,7 +1,8 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { addNewVehicle, fetchTracks } from "./trackApi";
+import { addNewDataTrack, addNewVehicle, fetchTracks } from "./trackApi";
 import { Vehicle } from "@/types/types";
+import { VehicleUser } from "@/models/vehicleModel";
 
 export interface TracksSliceState {
   tracksArrey: Vehicle[];
@@ -63,6 +64,32 @@ export const trackSlice = createAppSlice({
         },
       }
     ),
+    changeVehicleDataAsync: create.asyncThunk(
+      async ({
+        id,
+        data,
+      }: {
+        id: string;
+        data: { isUse: boolean; userData: VehicleUser };
+      }) => {
+        const newData = await addNewDataTrack({ id, data });
+        return newData;
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+          state.error = null;
+        },
+        fulfilled: (state, action) => {
+          state.status = "idle";
+          state.tracksArrey = action.payload;
+        },
+        rejected: (state, action) => {
+          state.status = "failed";
+          state.error = action.error.message || "Failed to add vehicle";
+        },
+      }
+    ),
   }),
 
   selectors: {
@@ -72,8 +99,12 @@ export const trackSlice = createAppSlice({
   },
 });
 
-export const { allTracksAsync, increment, addNewVehicleAsync } =
-  trackSlice.actions;
+export const {
+  allTracksAsync,
+  increment,
+  addNewVehicleAsync,
+  changeVehicleDataAsync,
+} = trackSlice.actions;
 export const { selectAllTracks, selectStatusTrack, selectErrorTrack } =
   trackSlice.selectors;
 

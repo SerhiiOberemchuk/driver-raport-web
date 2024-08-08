@@ -4,6 +4,8 @@ import { addNewDataTrack } from "@/lib/feauters/tracks/trackApi";
 import { VehicleType } from "@/types/types";
 import { useUser } from "@clerk/nextjs";
 import styles from "./SelectUserVehicle.module.css";
+import { useAppDispatch } from "@/lib/hook";
+import { changeVehicleDataAsync } from "@/lib/feauters/tracks/trackSlice";
 
 type Props = {
   type: VehicleType;
@@ -12,6 +14,7 @@ type Props = {
 
 const ButtonsTakePut = ({ type, selectedVehicleId }: Props) => {
   const { user } = useUser();
+  const dispatch = useAppDispatch();
 
   const handleTakeVehicle = async () => {
     const data = {
@@ -22,7 +25,9 @@ const ButtonsTakePut = ({ type, selectedVehicleId }: Props) => {
         dateStart: new Date(),
       },
     };
-    const updated = await addNewDataTrack({ id: selectedVehicleId, data });
+    console.log(selectedVehicleId);
+
+    dispatch(changeVehicleDataAsync({ id: selectedVehicleId, data }));
   };
 
   const handlePutVehicle = async () => {
@@ -34,7 +39,7 @@ const ButtonsTakePut = ({ type, selectedVehicleId }: Props) => {
         dateFinish: new Date(),
       },
     };
-    const updated = await addNewDataTrack({ id: selectedVehicleId, data });
+    dispatch(changeVehicleDataAsync({ id: selectedVehicleId, data }));
   };
 
   return (

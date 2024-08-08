@@ -1,12 +1,13 @@
-import client, { getCollectionDb } from "@/lib/mongodb";
-import { Vehicle, VEHICLE_TYPE } from "@/types/types";
+import { connectDB } from "@/lib/mongodb";
+import VehicleModel, { VEHICLE_TYPE } from "@/models/vehicleModel";
+import { Vehicle } from "@/types/types";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const collectionTracks = await getCollectionDb("my-deliveries", "vehicle");
+    await connectDB();
+    const vehicles = await VehicleModel.find();
 
-    const vehicles = await collectionTracks.find({}).toArray();
     if (!vehicles || vehicles.length === 0) {
       return NextResponse.json({ message: "No tracks" }, { status: 404 });
     }
@@ -30,18 +31,18 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
-    const collectionTracks = await getCollectionDb("my-deliveries", "vehicle");
-    await collectionTracks.insertOne({
+    await connectDB();
+    await VehicleModel.create({
       licensePlateNumber,
+      isUse: false,
       type,
       users: [],
     });
 
-    const vehicles = await collectionTracks.find({}).toArray();
+    const vehicles = await VehicleModel.find();
     return NextResponse.json(
       { message: "New vehicle added successfully!", vehicles },
-      { status: 201 }
+      { status: 200 }
     );
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message });

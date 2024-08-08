@@ -1,6 +1,7 @@
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
 import { collectionDb, dataBase } from "@/types/mongoDbTypes";
 import { MongoClient, ServerApiVersion } from "mongodb";
+import mongoose from "mongoose";
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
@@ -13,6 +14,7 @@ const options = {
     strict: true,
     deprecationErrors: true,
   },
+  // appName: 'devrel.article.nextauthjs'
 };
 
 let client: MongoClient;
@@ -37,11 +39,18 @@ if (process.env.NODE_ENV === "development") {
 // separate module, the client can be shared across functions.
 export default client;
 
-export const getCollectionDb = async (
-  DbName: dataBase,
-  collectionName: collectionDb
-) => {
-  const db = await client.db(DbName);
-  const collection = await db.collection(collectionName);
-  return collection;
+const { MONGODB_URI } = process.env;
+export const connectDB = async () => {
+  try {
+    const { connection } = await mongoose.connect(
+      MONGODB_URI as string
+      // options
+    );
+    if (connection.readyState === 1) {
+      return Promise.resolve(true);
+    }
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
 };

@@ -1,4 +1,4 @@
-import client from "@/lib/mongodb";
+import { getCollectionDb } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import * as bcrypt from "bcrypt";
 
@@ -12,8 +12,8 @@ export async function POST(request: Request) {
         { message: "Email and password required!" },
         { status: 422 }
       );
-    const db = await client.db("my-deliveries");
-    const userColection = await db.collection("Users");
+
+    const userColection = await getCollectionDb("my-deliveries", "Users");
 
     const existDriver = await userColection.findOne({ email });
 
