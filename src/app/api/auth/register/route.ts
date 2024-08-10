@@ -1,47 +1,47 @@
-import { getCollectionDb } from "@/lib/mongodb";
-import { NextResponse } from "next/server";
-import * as bcrypt from "bcrypt";
+// import { getCollectionDb } from "@/lib/mongodb";
+// import { NextResponse } from "next/server";
+// import * as bcrypt from "bcrypt";
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { email, password, name, surname } = body;
+// export async function POST(request: Request) {
+//   try {
+//     const body = await request.json();
+//     const { email, password, name, surname } = body;
 
-    if (!email || !password)
-      return NextResponse.json(
-        { message: "Email and password required!" },
-        { status: 422 }
-      );
+//     if (!email || !password)
+//       return NextResponse.json(
+//         { message: "Email and password required!" },
+//         { status: 422 }
+//       );
 
-    const userColection = await getCollectionDb("my-deliveries", "Users");
+//     const userColection = await getCollectionDb("my-deliveries", "Users");
 
-    const existDriver = await userColection.findOne({ email });
+//     const existDriver = await userColection.findOne({ email });
 
-    if (existDriver)
-      return NextResponse.json(
-        { message: "User with this email alredy exists" },
-        { status: 400 }
-      );
+//     if (existDriver)
+//       return NextResponse.json(
+//         { message: "User with this email alredy exists" },
+//         { status: 400 }
+//       );
 
-    const hashPassword = await bcrypt.hash(password, 10);
+//     const hashPassword = await bcrypt.hash(password, 10);
 
-    const insertedObject = await userColection.insertOne({
-      email,
-      password: hashPassword,
-      name,
-      surname,
-    });
+//     const insertedObject = await userColection.insertOne({
+//       email,
+//       password: hashPassword,
+//       name,
+//       surname,
+//     });
 
-    const newDriver = await userColection.findOne({
-      _id: insertedObject.insertedId,
-    });
+//     const newDriver = await userColection.findOne({
+//       _id: insertedObject.insertedId,
+//     });
 
-    return NextResponse.json({
-      message: "Driver registered successfuly",
-      newDriver,
-    });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: error });
-  }
-}
+//     return NextResponse.json({
+//       message: "Driver registered successfuly",
+//       newDriver,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return NextResponse.json({ message: error });
+//   }
+// }
