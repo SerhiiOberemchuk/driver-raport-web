@@ -5,7 +5,8 @@ import styles from "./page.module.css";
 import { inter } from "../ui/fonts";
 import { StoreProvider } from "./StoreProvider";
 import Header from "@/components/Header/Header";
-import Modal from "@/components/ModalWindows/ModalWindows";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "My deily repert",
@@ -30,7 +31,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 </div>
               </SignedOut>
             </main>
-            <Modal />
+            <ToastContainer />
           </body>
         </html>
       </ClerkProvider>

@@ -11,24 +11,12 @@ import clsx from "clsx";
 type Props = {};
 
 function SelectUserVehicle({}: Props) {
-  // const [isDisabledTrack, setIsDisabledTrack] = useState(false);
-  // const [isDisabledTrailer, setIsDisabledTrailer] = useState(false);
-  // const [isDisabledFurgone, setIsDisabledFurgone] = useState(false);
-
   const [trackId, setTrackId] = useState<string | "">("");
   const [trailerId, setTrailerId] = useState<string | "">("");
   const [furgoneId, setFurgoneId] = useState<string | "">("");
 
   const tracks = useAppSelector(selectAllTracks);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    watch,
-    getValues,
-    setValue,
-    formState: { errors, defaultValues },
-  } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: {
       track: "",
       trailer: "",
@@ -36,26 +24,16 @@ function SelectUserVehicle({}: Props) {
     },
   });
 
-  // const watchTrack = watch("track");
-  // const watchTrailer = watch("trailer");
-  // const watchFurgone = watch("furgone");
-
-  // useEffect(() => {
-  //   setIsDisabledFurgone(!!watchTrack || !!watchTrailer);
-  //   setIsDisabledTrack(!!watchFurgone);
-  //   setIsDisabledTrailer(!!watchFurgone);
-  // }, [watchTrack, watchTrailer, watchFurgone]);
-
   const typeTrack = useMemo(
-    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.track),
+    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.track) || [],
     [tracks]
   );
   const typeTrailer = useMemo(
-    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.trailer),
+    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.trailer) || [],
     [tracks]
   );
   const typeFurgone = useMemo(
-    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.furgone),
+    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.furgone) || [],
     [tracks]
   );
   return (
@@ -108,7 +86,8 @@ function SelectUserVehicle({}: Props) {
                   !item.isUse && styles.green
                 )}
               >
-                {item.licensePlateNumber}
+                {item.licensePlateNumber}{" "}
+                {item.isUse && item.users[0].userFullName}
               </option>
             ))}
         </select>
@@ -134,7 +113,8 @@ function SelectUserVehicle({}: Props) {
                   !item.isUse && styles.green
                 )}
               >
-                {item.licensePlateNumber}
+                {item.licensePlateNumber}{" "}
+                {item.isUse && item.users[0].userFullName}
               </option>
             ))}
         </select>

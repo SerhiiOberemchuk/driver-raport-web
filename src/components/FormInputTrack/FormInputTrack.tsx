@@ -2,17 +2,14 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import style from "./Form.module.css";
-import { optionSelectType, Vehicle, VEHICLE_TYPE } from "@/types/types";
-import { useAppDispatch, useAppSelector } from "@/lib/hook";
+import { optionSelectType, VEHICLE_TYPE } from "@/types/types";
+import { useAppDispatch } from "@/lib/hook";
 import { addNewVehicleAsync } from "@/lib/feauters/tracks/trackSlice";
-import Loader from "../Loader/Loader";
-import { openModal } from "@/lib/feauters/modal/modalSlice";
+import { Vehicle } from "@/models/VehicleModel";
 
 type Props = {};
 
 const FormInputTrack = (props: Props) => {
-  const { status, error } = useAppSelector((state) => state.tracks);
-  const tracksState = useAppSelector((state) => state.tracks);
   const {
     register,
     handleSubmit,
@@ -24,21 +21,8 @@ const FormInputTrack = (props: Props) => {
 
   const onSubmit = (data: Vehicle) => {
     dispatch(addNewVehicleAsync(data));
-    if (!error) {
-      dispatch(
-        openModal({
-          titleModalWindow: tracksState.error ? "Error" : "Con successo!",
-          typeModal: tracksState.error ? "error" : "success",
-          description: tracksState.error
-            ? "Error"
-            : "Veicolo aggiunto con successo!",
-        })
-      );
-    }
     reset();
   };
-
-  const isLoader = status === "loading";
 
   return (
     <>
@@ -77,7 +61,7 @@ const FormInputTrack = (props: Props) => {
           <span className={style.errors}>Scegli tipo di mezoo</span>
         )}
         <button type="submit">
-          {isLoader ? <Loader width={20} height={20} /> : <span>Ok</span>}
+          <span>Ok</span>
         </button>
       </form>
     </>

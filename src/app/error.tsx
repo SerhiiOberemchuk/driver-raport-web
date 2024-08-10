@@ -7,16 +7,14 @@ type Props = { error: Error; reset: () => void };
 
 function Error({ error, reset }: Props) {
   return (
-    <div>
-      <div className={styles.error}>
-        <p>
-          {" "}
-          Error:<span>{error.message}</span>{" "}
-        </p>
-        <button type="button" onClick={() => reset()}>
-          Try again
-        </button>
-      </div>
+    <div className={styles.error}>
+      <p>
+        {" "}
+        Error:<span>{error.message}</span>{" "}
+      </p>
+      <button type="button" onClick={() => reset()}>
+        Try again
+      </button>
     </div>
   );
 }

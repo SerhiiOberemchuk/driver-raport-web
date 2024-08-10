@@ -1,13 +1,13 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { addNewDataTrack, addNewVehicle, fetchTracks } from "./trackApi";
-import { Vehicle } from "@/types/types";
-import { VehicleUser } from "@/models/vehicleModel";
+import { Vehicle, VehicleUser } from "../../../models/VehicleModel";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
 
 export interface TracksSliceState {
   tracksArrey: Vehicle[];
   status: "idle" | "loading" | "failed";
-  error: null | string;
+  error: null | string | {};
 }
 
 const initialState: TracksSliceState = {
@@ -20,14 +20,22 @@ export const trackSlice = createAppSlice({
   name: "tracks",
   initialState,
   reducers: (create) => ({
-    increment: create.reducer((state) => {}),
+    increment: create.reducer((state) => {
+      // Example reducer function
+    }),
 
     allTracksAsync: create.asyncThunk(
-      async () => {
-        const data = await fetchTracks();
-
-        if (!data) throw new Error("ooppsss");
-        return data;
+      async (_, thunkApi) => {
+        try {
+          const response = await axios.get("/api/track");
+          return response.data;
+        } catch (error) {
+          const axiosError = error as AxiosError;
+          const errorMessage =
+            axiosError.response?.data || axiosError.message || "Unknown error";
+          toast.error(`${errorMessage}`, { theme: "colored" });
+          return thunkApi.rejectWithValue(errorMessage);
+        }
       },
       {
         pending: (state) => {
@@ -44,17 +52,33 @@ export const trackSlice = createAppSlice({
         },
       }
     ),
+
     addNewVehicleAsync: create.asyncThunk(
-      async ({ type, licensePlateNumber }: Partial<Vehicle>) => {
-        const data = await addNewVehicle({ type, licensePlateNumber });
-        return data;
+      async ({ type, licensePlateNumber }: Partial<Vehicle>, thunkApi) => {
+        try {
+          const response = await axios.post("api/track", {
+            type,
+            licensePlateNumber,
+          });
+
+          if (response.status === 200) {
+            toast.success("Vehicle added successfuly", { theme: "colored" });
+          }
+          return response.data;
+        } catch (error) {
+          const axiosError = error as AxiosError;
+          const errorMessage =
+            axiosError.response?.data || axiosError.message || "Unknown error";
+          toast.error(`${errorMessage}`, { theme: "colored" });
+          return thunkApi.rejectWithValue(errorMessage);
+        }
       },
       {
         pending: (state) => {
           state.status = "loading";
           state.error = null;
         },
-        fulfilled: (state, action) => {
+        fulfilled: (state, action: PayloadAction<Vehicle[]>) => {
           state.status = "idle";
           state.tracksArrey = action.payload;
         },
@@ -62,32 +86,94 @@ export const trackSlice = createAppSlice({
           state.status = "failed";
           state.error = action.error.message || "Failed to add vehicle";
         },
+        settled: () => {},
       }
     ),
-    changeVehicleDataAsync: create.asyncThunk(
-      async ({
-        id,
-        data,
-      }: {
-        id: string;
-        data: { isUse: boolean; userData: VehicleUser };
-      }) => {
-        const newData = await addNewDataTrack({ id, data });
-        return newData;
+
+    pickupVehicleAsync: create.asyncThunk(
+      async (
+        {
+          id,
+          data,
+        }: {
+          id: string;
+          data: { isUse: boolean; userData: VehicleUser };
+        },
+        thunkApi
+      ) => {
+        try {
+          const response = await axios.patch(`api/track/pickup/${id}`, data);
+          if (response.status === 200) {
+            toast.success("You have pick up vehicle successfuly", {
+              theme: "colored",
+            });
+          }
+          return response.data;
+        } catch (error) {
+          const axiosError = error as AxiosError;
+          const errorMessage =
+            axiosError.response?.data || axiosError.message || "Unknown error";
+          toast.error(`${errorMessage}`, { theme: "colored" });
+          return thunkApi.rejectWithValue(errorMessage);
+        }
       },
       {
         pending: (state) => {
           state.status = "loading";
           state.error = null;
         },
-        fulfilled: (state, action) => {
+        fulfilled: (state, action: PayloadAction<Vehicle[]>) => {
           state.status = "idle";
           state.tracksArrey = action.payload;
         },
         rejected: (state, action) => {
           state.status = "failed";
-          state.error = action.error.message || "Failed to add vehicle";
+          state.error = action.payload ?? action.error;
         },
+        settled: () => {},
+      }
+    ),
+    putVehicleAsync: create.asyncThunk(
+      async (
+        {
+          id,
+          data,
+        }: {
+          id: string;
+          data: { isUse: boolean; userData: VehicleUser };
+        },
+        thunkApi
+      ) => {
+        try {
+          const response = await axios.patch(`api/track/put/${id}`, data);
+          if (response.status === 200) {
+            toast.success("You have put vehicle successfuly", {
+              theme: "colored",
+            });
+          }
+          return response.data;
+        } catch (error) {
+          const axiosError = error as AxiosError;
+          const errorMessage =
+            axiosError.response?.data || axiosError.message || "Unknown error";
+          toast.error(`${errorMessage}`, { theme: "colored" });
+          return thunkApi.rejectWithValue(errorMessage);
+        }
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+          state.error = null;
+        },
+        fulfilled: (state, action: PayloadAction<Vehicle[]>) => {
+          state.status = "idle";
+          state.tracksArrey = action.payload;
+        },
+        rejected: (state, action) => {
+          state.status = "failed";
+          state.error = action.payload ?? action.error;
+        },
+        settled: () => {},
       }
     ),
   }),
@@ -103,8 +189,10 @@ export const {
   allTracksAsync,
   increment,
   addNewVehicleAsync,
-  changeVehicleDataAsync,
+  pickupVehicleAsync,
+  putVehicleAsync,
 } = trackSlice.actions;
+
 export const { selectAllTracks, selectStatusTrack, selectErrorTrack } =
   trackSlice.selectors;
 

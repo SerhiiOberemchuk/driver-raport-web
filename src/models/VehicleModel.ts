@@ -1,3 +1,4 @@
+import { VehicleType } from "@/types/types";
 import mongoose, { Schema, model } from "mongoose";
 
 export interface VehicleUser {
@@ -6,15 +7,8 @@ export interface VehicleUser {
   dateStart?: Date;
   dateFinish?: Date;
 }
-export const VEHICLE_TYPE = {
-  track: "track",
-  trailer: "trailer",
-  furgone: "furgone",
-} as const;
 
-export type VehicleType = keyof typeof VEHICLE_TYPE;
-
-export interface VehicleDocument {
+export interface Vehicle {
   _id: string;
   isUse: boolean;
   type: VehicleType;
@@ -22,7 +16,7 @@ export interface VehicleDocument {
   users: VehicleUser[];
 }
 
-const VehicleSchema = new Schema<VehicleDocument>(
+const VehicleSchema = new Schema<Vehicle>(
   {
     isUse: {
       type: Boolean,
@@ -57,5 +51,5 @@ const VehicleSchema = new Schema<VehicleDocument>(
 );
 
 const VehicleModel =
-  mongoose.models?.Vehicle || model<VehicleDocument>("Vehicle", VehicleSchema);
+  mongoose.models?.Vehicle || model<Vehicle>("Vehicle", VehicleSchema);
 export default VehicleModel;

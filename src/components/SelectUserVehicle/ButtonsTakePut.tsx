@@ -1,11 +1,14 @@
 "use client";
 import React from "react";
-import { addNewDataTrack } from "@/lib/feauters/tracks/trackApi";
 import { VehicleType } from "@/types/types";
 import { useUser } from "@clerk/nextjs";
 import styles from "./SelectUserVehicle.module.css";
 import { useAppDispatch } from "@/lib/hook";
-import { changeVehicleDataAsync } from "@/lib/feauters/tracks/trackSlice";
+import {
+  pickupVehicleAsync,
+  putVehicleAsync,
+} from "@/lib/feauters/tracks/trackSlice";
+import { toast } from "react-toastify";
 
 type Props = {
   type: VehicleType;
@@ -17,6 +20,10 @@ const ButtonsTakePut = ({ type, selectedVehicleId }: Props) => {
   const dispatch = useAppDispatch();
 
   const handleTakeVehicle = async () => {
+    if (!selectedVehicleId) {
+      toast.info("Devi scegliere veicolo");
+      return;
+    }
     const data = {
       isUse: true,
       userData: {
@@ -25,12 +32,14 @@ const ButtonsTakePut = ({ type, selectedVehicleId }: Props) => {
         dateStart: new Date(),
       },
     };
-    console.log(selectedVehicleId);
-
-    dispatch(changeVehicleDataAsync({ id: selectedVehicleId, data }));
+    await dispatch(pickupVehicleAsync({ id: selectedVehicleId, data }));
   };
 
   const handlePutVehicle = async () => {
+    if (!selectedVehicleId) {
+      toast.info("Devi scegliere veicolo");
+      return;
+    }
     const data = {
       isUse: false,
       userData: {
@@ -39,7 +48,7 @@ const ButtonsTakePut = ({ type, selectedVehicleId }: Props) => {
         dateFinish: new Date(),
       },
     };
-    dispatch(changeVehicleDataAsync({ id: selectedVehicleId, data }));
+    await dispatch(putVehicleAsync({ id: selectedVehicleId, data }));
   };
 
   return (

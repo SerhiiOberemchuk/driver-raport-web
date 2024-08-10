@@ -1,6 +1,6 @@
 import { connectDB } from "@/lib/mongodb";
-import VehicleModel from "@/models/vehicleModel";
-import Vehicle, { VehicleUser } from "@/models/vehicleModel";
+import VehicleModel, { VehicleUser } from "@/models/VehicleModel";
+
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
@@ -14,30 +14,15 @@ export async function PATCH(request: Request, { params }: RequestParams) {
     const vehicleId = new ObjectId(params.id);
     const body = await request.json();
     const { isUse, userData }: { isUse: string; userData: VehicleUser } = body;
-    const { userFullName, dateFinish, dateStart, userId } = userData;
+    const { dateFinish, userId } = userData;
 
     const finedVehicle = await VehicleModel.findById(params.id);
 
     if (!finedVehicle) {
-      return NextResponse.json(
-        { message: "Not found vehicle", finedVehicle },
-        { status: 404 }
-      );
+      return NextResponse.json("Not found vehicle", { status: 404 });
     }
 
-    if (finedVehicle.isUse && isUse) {
-      return NextResponse.json(
-        { message: `Vehicle are using ` },
-        { status: 403 }
-      );
-    }
-
-    if (isUse) {
-      const updatedVehicle = await VehicleModel.findById(params.id);
-      updatedVehicle.isUse = isUse;
-      updatedVehicle.users.push({ userFullName, dateStart, userId });
-      await updatedVehicle.save();
-    } else {
+    if (!isUse) {
       const updatedVehicle = await VehicleModel.findOneAndUpdate(
         {
           _id: vehicleId,
@@ -55,15 +40,15 @@ export async function PATCH(request: Request, { params }: RequestParams) {
 
       if (!updatedVehicle) {
         return NextResponse.json(
-          { message: "With present vehicle you have not open delivery" },
+          "With present vehicle you have not open delivery",
           { status: 500 }
         );
       }
     }
 
-    const vehicles = await Vehicle.find();
-    return NextResponse.json({ vehicles }, { status: 200 });
+    const vehicles = await VehicleModel.find();
+    return NextResponse.json(vehicles, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message });
+    return NextResponse.json(`${(error as Error).message}`);
   }
 }
