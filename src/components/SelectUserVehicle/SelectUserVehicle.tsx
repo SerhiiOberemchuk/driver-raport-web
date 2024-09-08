@@ -1,126 +1,121 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import styles from "./SelectUserVehicle.module.css";
 import { useAppSelector } from "@/lib/hook";
 import { selectAllTracks } from "@/lib/feauters/tracks/trackSlice";
-import { VEHICLE_TYPE } from "@/types/types";
-import { useForm } from "react-hook-form";
-import ButtonsTakePut from "./ButtonsTakePut";
-import clsx from "clsx";
+import { VEHICLE_TYPE, VehicleType } from "@/types/types";
+import ButtonTake from "./ButtonsTake";
+import ButtonPut from "./ButtonPut";
+import { Box, Flex, Select } from "@mantine/core";
 
-type Props = {};
+type VehicleSelectProps = {
+  label: string;
+  placeholder: string;
+  vehicleType: VehicleType;
+  selectedVehicleId: string | null;
+  onChange: (value: string | null) => void;
+  clear: () => void;
+};
 
-function SelectUserVehicle({}: Props) {
-  const [trackId, setTrackId] = useState<string | "">("");
-  const [trailerId, setTrailerId] = useState<string | "">("");
-  const [furgoneId, setFurgoneId] = useState<string | "">("");
-
+function VehicleSelect({
+  label,
+  placeholder,
+  vehicleType,
+  selectedVehicleId,
+  onChange,
+  clear,
+}: VehicleSelectProps) {
   const tracks = useAppSelector(selectAllTracks);
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      track: "",
-      trailer: "",
-      furgone: "",
-    },
-  });
 
-  const typeTrack = useMemo(
-    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.track) || [],
-    [tracks]
-  );
-  const typeTrailer = useMemo(
-    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.trailer) || [],
-    [tracks]
-  );
-  const typeFurgone = useMemo(
-    () => tracks?.filter((item) => item.type === VEHICLE_TYPE.furgone) || [],
-    [tracks]
-  );
+  const vehicleOptions = useMemo(() => {
+    if (tracks && tracks.length > 0) {
+      const array = tracks
+        ?.filter((item) => item.type === vehicleType)
+        .map((item) => ({
+          value: item._id,
+          label: `${item.licensePlateNumber}${
+            item.isUse
+              ? ` (${item.users[item.users.length - 1].userFullName})`
+              : ""
+          }`,
+        }));
+      return array;
+    } else {
+      return [];
+    }
+  }, [tracks, vehicleType]);
+
   return (
-    <form
-      onSubmit={handleSubmit((data) => console.log(data))}
-      className={styles.form}
-    >
-      <div>
-        <label htmlFor="track">Uso camion:</label>
-        <select
-          id="track"
-          {...register("track")}
-          onChange={(e) => setTrackId(e.target.selectedOptions[0].id)}
-        >
-          <option value="">Non selezionato</option>
-          {typeTrack.length > 0 &&
-            typeTrack.map((item) => (
-              <option
-                id={item._id}
-                key={item._id}
-                value={item.licensePlateNumber}
-                className={clsx(
-                  item.isUse && styles.red,
-                  !item.isUse && styles.green
-                )}
-              >
-                {item.licensePlateNumber}{" "}
-                {item.isUse && item.users[0].userFullName}
-              </option>
-            ))}
-        </select>
-        <ButtonsTakePut type="track" selectedVehicleId={trackId} />
-      </div>
-      <div>
-        <label htmlFor="trailer">Uso rimorchio:</label>
-        <select
-          id="trailer"
-          {...register("trailer")}
-          onChange={(e) => setTrailerId(e.target.selectedOptions[0].id)}
-        >
-          <option value="">Non selezionato</option>
-          {typeTrailer.length > 0 &&
-            typeTrailer.map((item) => (
-              <option
-                key={item._id}
-                id={item._id}
-                value={item.licensePlateNumber}
-                className={clsx(
-                  item.isUse && styles.red,
-                  !item.isUse && styles.green
-                )}
-              >
-                {item.licensePlateNumber}{" "}
-                {item.isUse && item.users[0].userFullName}
-              </option>
-            ))}
-        </select>
-        <ButtonsTakePut type="trailer" selectedVehicleId={trailerId} />
-      </div>
-      <div>
-        <label htmlFor="furgone">Uso furgone:</label>
-        <select
-          defaultValue=""
-          id="furgone"
-          {...register("furgone")}
-          onChange={(e) => setFurgoneId(e.target.selectedOptions[0].id)}
-        >
-          <option value="">Non selezionato</option>
-          {typeFurgone.length > 0 &&
-            typeFurgone.map((item) => (
-              <option
-                key={item._id}
-                id={item._id}
-                value={item.licensePlateNumber}
-                className={clsx(
-                  item.isUse && styles.red,
-                  !item.isUse && styles.green
-                )}
-              >
-                {item.licensePlateNumber}{" "}
-                {item.isUse && item.users[0].userFullName}
-              </option>
-            ))}
-        </select>
-        <ButtonsTakePut type="furgone" selectedVehicleId={furgoneId} />
-      </div>
-    </form>
+    <Box>
+      <Select
+        label={label}
+        placeholder={placeholder}
+        data={vehicleOptions}
+        searchable
+        onClear={() => console.log()}
+        onChange={onChange}
+        defaultValue=""
+        allowDeselect
+        clearable
+        comboboxProps={{
+          transitionProps: { transition: "pop", duration: 200 },
+        }}
+        nothingFoundMessage="Se non hai trovarto veicolo vai sotto e agiungi nuovo mezzo"
+      />
+      {selectedVehicleId && (
+        <Flex gap="lg">
+          <ButtonTake
+            clear={clear}
+            selectedVehicleId={selectedVehicleId}
+            title={`Prendo ${vehicleType}`}
+          />
+          <ButtonPut
+            clear={clear}
+            selectedVehicleId={selectedVehicleId}
+            title={`Lascio ${vehicleType}`}
+          />
+        </Flex>
+      )}
+    </Box>
+  );
+}
+
+function SelectUserVehicle() {
+  const [trackId, setTrackId] = useState<string | null>(null);
+  const [trailerId, setTrailerId] = useState<string | null>(null);
+  const [furgoneId, setFurgoneId] = useState<string | null>(null);
+
+  const handleClearSelect = () => {
+    setTrackId(null);
+    setTrailerId(null);
+    setFurgoneId(null);
+  };
+  return (
+    <>
+      <VehicleSelect
+        clear={handleClearSelect}
+        label="Uso camion:"
+        placeholder="Camion"
+        vehicleType={VEHICLE_TYPE.track}
+        selectedVehicleId={trackId}
+        onChange={setTrackId}
+      />
+      <VehicleSelect
+        clear={handleClearSelect}
+        label="Uso rimorchio"
+        placeholder="Rimorchio"
+        vehicleType={VEHICLE_TYPE.trailer}
+        selectedVehicleId={trailerId}
+        onChange={setTrailerId}
+      />
+      <VehicleSelect
+        clear={handleClearSelect}
+        label="Uso furgone:"
+        placeholder="Furgone"
+        vehicleType={VEHICLE_TYPE.furgone}
+        selectedVehicleId={furgoneId}
+        onChange={setFurgoneId}
+      />
+    </>
   );
 }
 

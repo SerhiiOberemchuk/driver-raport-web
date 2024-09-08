@@ -1,8 +1,15 @@
-import MainePage from "@/components/MainPage/MainePage";
-import React from "react";
+import ContainerPage from "@/components/Containers/ContainerPage";
+import { Center, Title } from "@mantine/core";
 
 interface HomeProps {}
 
-export default function Home(props: HomeProps) {
-  return <MainePage />;
+export default async function Home(props: HomeProps) {
+  return (
+    <ContainerPage>
+      <Center>
+        <Title order={1}>Created by OBEREMCHUK</Title>
+        {/* <p>Welcome {session?.user.name}!</p> */}
+      </Center>
+    </ContainerPage>
+  );
 }

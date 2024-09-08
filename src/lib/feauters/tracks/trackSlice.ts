@@ -2,7 +2,7 @@ import { createAppSlice } from "@/lib/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Vehicle, VehicleUser } from "../../../models/VehicleModel";
 import axios, { AxiosError } from "axios";
-import { toast } from "react-toastify";
+import { showNotification } from "@mantine/notifications";
 
 export interface TracksSliceState {
   tracksArrey: Vehicle[];
@@ -33,7 +33,13 @@ export const trackSlice = createAppSlice({
           const axiosError = error as AxiosError;
           const errorMessage =
             axiosError.response?.data || axiosError.message || "Unknown error";
-          toast.error(`${errorMessage}`, { theme: "colored" });
+          showNotification({
+            title: "Error",
+            message: `${errorMessage}`,
+            color: "green",
+            autoClose: 3000,
+            withCloseButton: true,
+          });
           return thunkApi.rejectWithValue(errorMessage);
         }
       },
@@ -62,14 +68,26 @@ export const trackSlice = createAppSlice({
           });
 
           if (response.status === 200) {
-            toast.success("Vehicle added successfuly", { theme: "colored" });
+            showNotification({
+              title: "Success",
+              message: "Vehicle added successfuly",
+              color: "green",
+              autoClose: 3000,
+              withCloseButton: true,
+            });
           }
           return response.data;
         } catch (error) {
           const axiosError = error as AxiosError;
           const errorMessage =
             axiosError.response?.data || axiosError.message || "Unknown error";
-          toast.error(`${errorMessage}`, { theme: "colored" });
+          showNotification({
+            title: "Error",
+            message: `${errorMessage}`,
+            color: "red",
+            autoClose: 3000,
+            withCloseButton: true,
+          });
           return thunkApi.rejectWithValue(errorMessage);
         }
       },
@@ -104,8 +122,12 @@ export const trackSlice = createAppSlice({
         try {
           const response = await axios.patch(`api/track/pickup/${id}`, data);
           if (response.status === 200) {
-            toast.success("You have pick up vehicle successfuly", {
-              theme: "colored",
+            showNotification({
+              title: "Success",
+              message: "You have pick up vehicle successfuly",
+              color: "green",
+              autoClose: 3000,
+              withCloseButton: true,
             });
           }
           return response.data;
@@ -113,7 +135,13 @@ export const trackSlice = createAppSlice({
           const axiosError = error as AxiosError;
           const errorMessage =
             axiosError.response?.data || axiosError.message || "Unknown error";
-          toast.error(`${errorMessage}`, { theme: "colored" });
+          showNotification({
+            title: "Error",
+            message: `${errorMessage}`,
+            color: "red",
+            autoClose: 3000,
+            withCloseButton: true,
+          });
           return thunkApi.rejectWithValue(errorMessage);
         }
       },
@@ -147,8 +175,12 @@ export const trackSlice = createAppSlice({
         try {
           const response = await axios.patch(`api/track/put/${id}`, data);
           if (response.status === 200) {
-            toast.success("You have put vehicle successfuly", {
-              theme: "colored",
+            showNotification({
+              title: "Success",
+              message: "You have put vehicle successfuly",
+              color: "green",
+              autoClose: 3000,
+              withCloseButton: true,
             });
           }
           return response.data;
@@ -156,7 +188,14 @@ export const trackSlice = createAppSlice({
           const axiosError = error as AxiosError;
           const errorMessage =
             axiosError.response?.data || axiosError.message || "Unknown error";
-          toast.error(`${errorMessage}`, { theme: "colored" });
+          showNotification({
+            title: "Error",
+            message: `${errorMessage}`,
+            color: "red",
+            autoClose: 3000,
+            withCloseButton: true,
+          });
+
           return thunkApi.rejectWithValue(errorMessage);
         }
       },

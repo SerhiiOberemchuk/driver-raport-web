@@ -1,29 +1,31 @@
 "use client";
 
 import React, { useEffect } from "react";
-import styles from "./userData.module.css";
-import { useUser } from "@clerk/nextjs";
 import { useAppSelector, useAppDispatch } from "@/lib/hook";
 import {
   allTracksAsync,
   selectAllTracks,
   selectStatusTrack,
 } from "@/lib/feauters/tracks/trackSlice";
+import { Box, Title } from "@mantine/core";
 
 const UserData = () => {
-  const { user } = useUser();
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(allTracksAsync());
   }, [dispatch]);
 
+  const user = {
+    id: "jjjjj",
+    fullName: "derrrr",
+  };
   const tracks = useAppSelector(selectAllTracks) || [];
 
   const status = useAppSelector(selectStatusTrack);
 
   return (
-    <div className={styles.userSection}>
-      <h3>{user?.fullName}</h3>
+    <Box>
+      <Title order={2}>{user?.fullName}</Title>
 
       {/* {tracks.length > 0 && (
         <p>
@@ -31,7 +33,7 @@ const UserData = () => {
           {tracks[tracks.length - 1].numberTrailer}
         </p>
       )} */}
-    </div>
+    </Box>
   );
 };
 

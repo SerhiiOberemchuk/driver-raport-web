@@ -1,21 +1,20 @@
 "use client";
 
+import { Box, Button, Text } from "@mantine/core";
 import React from "react";
-import styles from "./page.module.css";
 
 type Props = { error: Error; reset: () => void };
 
 function Error({ error, reset }: Props) {
   return (
-    <div className={styles.error}>
-      <p>
-        {" "}
+    <Box>
+      <Text>
         Error:<span>{error.message}</span>{" "}
-      </p>
-      <button type="button" onClick={() => reset()}>
+      </Text>
+      <Button type="button" onClick={() => reset()}>
         Try again
-      </button>
-    </div>
+      </Button>
+    </Box>
   );
 }
 

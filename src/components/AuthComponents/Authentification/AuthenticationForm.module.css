@@ -1,0 +1,7 @@
+.form {
+  padding-top: 0px;
+  max-width: calc(26.25rem * var(--mantine-scale));
+  margin-left: auto;
+  margin-right: auto;
+  height: 100vh;
+}

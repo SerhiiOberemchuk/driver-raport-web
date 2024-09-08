@@ -1,15 +1,10 @@
-import Loader from "@/components/Loader/Loader";
-import LoaderWrapper from "@/components/Loader/LoaderWrapper";
+import LoaderPage from "@/components/Loader/LoaderPage";
 import React from "react";
 
 type Props = {};
 
 const Loading = (props: Props) => {
-  return (
-    <LoaderWrapper>
-      <Loader />
-    </LoaderWrapper>
-  );
+  return <LoaderPage />;
 };
 
 export default Loading;

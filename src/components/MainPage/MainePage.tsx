@@ -1,18 +1,9 @@
 import React from "react";
-import styles from "./MainePage.module.css";
-import Navigation from "../Navigation/Navigation";
+import { Center, Stack, Title } from "@mantine/core";
 type Props = {};
 
 const MainePage = (props: Props) => {
-  return (
-    <section className={styles.main}>
-      <div className={styles.center}>
-        <h1>Mio Viaggio</h1>
-      </div>
-
-      <Navigation />
-    </section>
-  );
+  return <Stack gap="lg" align="center" justify="center"></Stack>;
 };
 
 export default MainePage;

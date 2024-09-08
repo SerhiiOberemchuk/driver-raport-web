@@ -1,12 +1,3 @@
-export interface User {
-  id?: string;
-  name?: string | null;
-  email?: string | null;
-  image?: string | null;
-  password?: string | null;
-  surname?: string | null;
-}
-
 export const VEHICLE_TYPE = {
   track: "track",
   trailer: "trailer",

@@ -2,8 +2,9 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { trackSlice } from "./feauters/tracks/trackSlice";
 import { modalSlice } from "./feauters/modal/modalSlice";
+import { userSlice } from "./feauters/users/usersSlice";
 
-const rootReducer = combineSlices(trackSlice, modalSlice);
+const rootReducer = combineSlices(trackSlice, modalSlice, userSlice);
 
 export type RootState = ReturnType<typeof rootReducer>;
 
