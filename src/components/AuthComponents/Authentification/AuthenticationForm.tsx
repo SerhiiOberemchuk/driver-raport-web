@@ -24,6 +24,7 @@ import {
   createUserAsync,
   userLoginAsync,
 } from "@/lib/feauters/users/usersSlice";
+import { useRouter } from "next/navigation";
 
 type Type = "login" | "register" | "";
 
@@ -47,6 +48,9 @@ export function AuthenticationForm(props: PaperProps) {
     },
   });
   const dispatch = useAppDispatch();
+
+  const router = useRouter();
+
   return (
     <Center className={style.form}>
       <Paper radius="md" p="xl" withBorder {...props}>
@@ -71,7 +75,10 @@ export function AuthenticationForm(props: PaperProps) {
               dispatch(createUserAsync(form.values));
             }
             if (type === "login") {
-              dispatch(userLoginAsync(form.values));
+              const result = await dispatch(userLoginAsync(form.values));
+              if (userLoginAsync.fulfilled.match(result)) {
+                router.push("/dashboard/track");
+              }
             }
           })}
         >

@@ -6,10 +6,19 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
 import { Provider } from "react-redux";
-
+import NextPersistWrapper from "next-persist/lib/NextPersistWrapper";
 interface Props {
   readonly children: ReactNode;
 }
+
+const npConfig = {
+  method: "localStorage",
+  allowList: {
+    userState: [],
+    // trackSlice: ["stateItemOne", "stateItemTwo"],
+    // modalSlice: [],
+  },
+};
 
 export const StoreProvider = ({ children }: Props) => {
   const storeRef = useRef<AppStore | null>(null);
@@ -29,5 +38,11 @@ export const StoreProvider = ({ children }: Props) => {
     }
   }, []);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return (
+    <Provider store={storeRef.current}>
+      <NextPersistWrapper wrapperConfig={npConfig}>
+        {children}
+      </NextPersistWrapper>
+    </Provider>
+  );
 };

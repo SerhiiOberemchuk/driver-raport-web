@@ -29,6 +29,7 @@ export async function POST(request: Request) {
       password: hashPassword,
       name,
       surname,
+      token: "",
     });
 
     if (!newUser) {

@@ -1,10 +1,9 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Vehicle, VehicleUser } from "../../../models/VehicleModel";
 import axios, { AxiosError } from "axios";
 import { showNotification } from "@mantine/notifications";
 import { User } from "@/types/userTypes";
-
+import { getLocalStore } from "next-persist";
 export interface UserSliceState {
   user: {};
   status: "idle" | "loading" | "failed";
@@ -18,6 +17,8 @@ const initialState: UserSliceState = {
   error: null,
   isLogined: false,
 };
+
+const persistedState = getLocalStore("userState", initialState);
 
 export const userSlice = createAppSlice({
   name: "userState",
@@ -122,9 +123,12 @@ export const userSlice = createAppSlice({
               withCloseButton: true,
             });
           }
+
           return response.data;
         } catch (error) {
           const axiosError = error as AxiosError;
+          console.log(axiosError);
+
           const errorMessage =
             axiosError.response?.data || axiosError.message || "Unknown error";
           showNotification({
@@ -139,16 +143,16 @@ export const userSlice = createAppSlice({
         }
       },
       {
-        pending: (state) => {
+        pending: (state = persistedState) => {
           state.status = "loading";
           state.error = null;
         },
-        fulfilled: (state, action: PayloadAction<User>) => {
+        fulfilled: (state = persistedState, action: PayloadAction<User>) => {
           state.status = "idle";
           state.user = action.payload;
           state.isLogined = true;
         },
-        rejected: (state, action) => {
+        rejected: (state = persistedState, action) => {
           state.status = "failed";
           state.error = action.payload ?? action.error;
           state.isLogined = false;

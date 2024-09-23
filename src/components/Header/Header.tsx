@@ -30,13 +30,9 @@ import {
 } from "@tabler/icons-react";
 import classes from "./HeaderTabs.module.css";
 import Link from "next/link";
-
-const user = {
-  name: "Jane Spoonfighter",
-  email: "janspoon@fighter.dev",
-  image:
-    "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-};
+import { useAppSelector } from "@/lib/hook";
+import { selectUser } from "@/lib/feauters/users/usersSlice";
+import { User } from "@/types/userTypes";
 
 const tabs = [
   { label: "Home", href: "/" },
@@ -49,6 +45,8 @@ export function Header() {
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+
+  const user: Partial<User> = useAppSelector(selectUser);
 
   const items = tabs.map((tab) => (
     <Tabs.Tab value={tab.label} key={tab.label} p={0}>
@@ -83,7 +81,7 @@ export function Header() {
                     size={20}
                   />
                   <Text fw={500} size="sm" lh={1} mr={3}>
-                    {user.name}
+                    {user.name} {user.surname}
                   </Text>
                   <IconChevronDown
                     style={{ width: rem(12), height: rem(12) }}

@@ -21,6 +21,9 @@ const UserSchema = new Schema<User>(
       type: String,
       required: [true, "Password is required"],
     },
+    token: {
+      type: String,
+    },
   },
   {
     timestamps: true,
