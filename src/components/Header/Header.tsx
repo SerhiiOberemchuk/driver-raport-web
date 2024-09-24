@@ -1,6 +1,7 @@
 "use client";
+
 import cx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Avatar,
@@ -12,7 +13,6 @@ import {
   Burger,
   rem,
   useMantineTheme,
-  Button,
   NavLink,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -22,16 +22,12 @@ import {
   IconStar,
   IconMessage,
   IconSettings,
-  IconPlayerPause,
-  IconTrash,
   IconSwitchHorizontal,
   IconChevronDown,
-  IconHome2,
 } from "@tabler/icons-react";
 import classes from "./HeaderTabs.module.css";
 import Link from "next/link";
-import { useAppSelector } from "@/lib/hook";
-import { selectUser } from "@/lib/feauters/users/usersSlice";
+
 import { User } from "@/types/userTypes";
 
 const tabs = [
@@ -45,14 +41,29 @@ export function Header() {
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const [user, setUser] = useState<Partial<User>>({});
 
-  const user: Partial<User> = useAppSelector(selectUser);
+  useEffect(() => {
+    const userStored: string | null = localStorage.getItem("userState");
+
+    if (userStored) {
+      try {
+        const parsedUser = JSON.parse(userStored);
+        if (parsedUser && parsedUser.user) {
+          setUser(parsedUser.user);
+        }
+      } catch (error) {
+        console.error("Error parsing userState:", error);
+      }
+    }
+  }, []);
 
   const items = tabs.map((tab) => (
     <Tabs.Tab value={tab.label} key={tab.label} p={0}>
       <NavLink component={Link} href={tab.href} label={tab.label} />
     </Tabs.Tab>
   ));
+
   return (
     <header className={classes.header}>
       <Container className={classes.mainSection} size="md">

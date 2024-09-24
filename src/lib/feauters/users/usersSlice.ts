@@ -22,7 +22,7 @@ const persistedState = getLocalStore("userState", initialState);
 
 export const userSlice = createAppSlice({
   name: "userState",
-  initialState,
+  initialState: persistedState,
   reducers: (create) => ({
     increment: create.reducer((state) => {
       // Example reducer function
