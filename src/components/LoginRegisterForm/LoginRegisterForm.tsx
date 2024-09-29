@@ -97,7 +97,7 @@ const LoginRegisterForm = ({
           </Link>
         ) : (
           <Link href="/register" className="">
-            Don't have an account?
+            Do not have an account?
           </Link>
         )}
       </form>
