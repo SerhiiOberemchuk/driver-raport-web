@@ -1,13 +1,14 @@
 import mongoose, { Schema, model } from "mongoose";
 export interface UserDocument {
-  _id: string;
+  _id?: string;
   email: string;
   password: string;
-  name: string;
-  phone: string;
-  image: string;
-  createdAt: Date;
-  updatedAt: Date;
+  name?: string;
+  lastName?: string;
+  phone?: string;
+  image?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 const UserSchema = new Schema<UserDocument>(
   {
@@ -27,6 +28,10 @@ const UserSchema = new Schema<UserDocument>(
     name: {
       type: String,
       required: [true, "Name is required"],
+    },
+    lastName: {
+      type: String,
+      required: [true, "lastName is required"],
     },
   },
   {

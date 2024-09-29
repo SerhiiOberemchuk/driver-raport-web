@@ -1,6 +1,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-color: rgb(0, 255, 179);
+  --primary-color-hover: rgb(15, 196, 142);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,7 +31,13 @@ body {
   padding: 0;
   margin: 0;
 }
-
+input,
+textarea,
+button {
+  font-family: inherit;
+  line-height: inherit;
+  transition: all 0.5s ease-in-out;
+}
 a {
   color: inherit;
   text-decoration: none;
