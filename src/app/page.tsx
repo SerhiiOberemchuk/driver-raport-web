@@ -1,4 +1,7 @@
 "use client";
+import Container from "@/components/common/container/Container";
+import Section from "@/components/common/section/Section";
+import HomePage from "@/components/HomePage/HomePage";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,40 +14,40 @@ export default function Home() {
     if (status === "authenticated") {
       return (
         <>
-          <button
-            className="border border-solid border-black rounded"
-            onClick={() => {
-              signOut({ redirect: false }).then(() => {
-                router.push("/");
-              });
-            }}
-          >
-            Sign Out
-          </button>
           {session.user && (
-            <p>
-              Signed in as name: {session.user.name} <br /> email{" "}
-              {session.user.email}
-            </p>
+            <HomePage name={session.user.name as string}>
+              <button
+                className=""
+                onClick={() => {
+                  signOut({ redirect: false }).then(() => {
+                    router.push("/");
+                  });
+                }}
+              >
+                Sign Out
+              </button>
+            </HomePage>
           )}
         </>
       );
     } else if (status === "loading") {
-      return <span className="text-[#888] text-sm mt-7">Loading...</span>;
+      return <span className="">Loading...</span>;
     } else {
       return (
-        <Link
-          href="/login"
-          className="border border-solid border-black rounded"
-        >
-          Sign In
-        </Link>
+        <Section>
+          <Container>
+            <h1>You are not logined!!! Please follow next link</h1>
+
+            <Link href="/login" className="">
+              Sign In
+            </Link>
+          </Container>
+        </Section>
       );
     }
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-xl">Home</h1>
       {showSession()}
     </main>
   );
