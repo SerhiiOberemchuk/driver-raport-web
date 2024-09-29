@@ -1,8 +1,6 @@
 import React from "react";
 
-type Props = {};
-
-const PageDashboard = (props: Props) => {
+const PageDashboard = () => {
   return <h1>Dashboard</h1>;
 };
 
