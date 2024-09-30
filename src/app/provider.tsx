@@ -7,5 +7,5 @@ type Props = {
 };
 
 export const Provider = ({ children }: Props) => {
-  return <SessionProvider basePath="/api/auth">{children}</SessionProvider>;
+  return <SessionProvider>{children}</SessionProvider>;
 };
