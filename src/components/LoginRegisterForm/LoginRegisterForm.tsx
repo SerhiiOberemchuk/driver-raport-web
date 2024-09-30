@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { UserDocument } from "@/models/User";
 import { object, string, InferType } from "yup";
 import React from "react";
-// import { ErrorMessage } from "@hookform/error-message";
 
 interface LoginRegisterFormProps {
   handleSubmitProps: (data: UserDocument) => void;
@@ -41,6 +40,10 @@ const LoginRegisterForm = ({
 
   return (
     <section className={styles.section}>
+      <Link href="/" className={styles.iconHome}>
+        <img src="/svg/icons8-home2.svg" alt="icon-home" />
+      </Link>
+
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <h1 className={styles.hero}>{isRegister ? "Register" : "Login"}</h1>
 

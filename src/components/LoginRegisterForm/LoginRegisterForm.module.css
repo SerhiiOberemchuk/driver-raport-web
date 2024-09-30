@@ -10,9 +10,12 @@
   background-position: center;
 
   background-size: cover;
+  padding: 0 16px;
 }
 
 .form {
+  width: 100%;
+  max-width: 375px;
   background-color: rgb(249, 249, 249);
   border-radius: 20px;
   display: flex;
@@ -53,4 +56,11 @@
 .errorMessage {
   font-size: small;
   color: red;
+}
+
+.iconHome {
+  fill: aquamarine;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

@@ -1,6 +1,7 @@
 "use client";
 import Container from "@/components/common/container/Container";
 import Section from "@/components/common/section/Section";
+import Spiner from "@/components/common/Spiner/Spiner";
 import HomePage from "@/components/HomePage/HomePage";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -31,7 +32,7 @@ export default function Home() {
         </>
       );
     } else if (status === "loading") {
-      return <span className="">Loading...</span>;
+      return <Spiner />;
     } else {
       return (
         <Section>
@@ -46,9 +47,5 @@ export default function Home() {
       );
     }
   };
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      {showSession()}
-    </main>
-  );
+  return <main>{showSession()}</main>;
 }

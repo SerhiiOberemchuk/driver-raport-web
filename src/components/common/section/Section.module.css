@@ -4,4 +4,9 @@
   width: 100%;
   background-color: rgb(242, 238, 234);
   height: 100vh;
+  background-image: url("/images/wp1898084.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+
+  background-size: cover;
 }
