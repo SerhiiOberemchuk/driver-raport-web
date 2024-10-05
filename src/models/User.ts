@@ -40,4 +40,9 @@ const UserSchema = new Schema<UserDocument>(
 );
 
 const User = mongoose.models?.User || model<UserDocument>("User", UserSchema);
+
 export default User;
+
+export const config = {
+  runtime: "nodejs",
+};
