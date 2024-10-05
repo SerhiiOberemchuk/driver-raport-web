@@ -5,18 +5,19 @@ import { register } from "@/actions/register";
 import LoginRegisterForm from "@/components/LoginRegisterForm/LoginRegisterForm";
 import { UserDocument } from "@/models/User";
 import { toast } from "react-toastify";
+import { useNotifications } from "@toolpad/core";
 
 export default function Register() {
   const router = useRouter();
-
+  const notifications = useNotifications();
   const handleSubmit = async (data: UserDocument) => {
     const r = await register(data);
 
     if (r?.error) {
       console.log(r.error);
-      toast.error(r.error);
+      notifications.show(r.error, { severity: "error" });
     } else {
-      toast.success("Success!!!");
+      notifications.show("Success!!!", { severity: "success" });
       router.push("/login");
     }
   };

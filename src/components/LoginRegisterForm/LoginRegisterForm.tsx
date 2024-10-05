@@ -40,10 +40,6 @@ const LoginRegisterForm = ({
 
   return (
     <section className={styles.section}>
-      <Link href="/" className={styles.iconHome}>
-        <img src="/svg/icons8-home2.svg" alt="icon-home" />
-      </Link>
-
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <h1 className={styles.hero}>{isRegister ? "Register" : "Login"}</h1>
 
@@ -95,7 +91,7 @@ const LoginRegisterForm = ({
         </button>
 
         {isRegister ? (
-          <Link href="/login" className="">
+          <Link href="/auth/signin" className="">
             Already have an account?
           </Link>
         ) : (
