@@ -1,9 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import User from "./models/User";
 import bcrypt from "bcryptjs";
-import { connectDB } from "./lib/mongodb";
-
+import prisma from "./lib/prisma";
 export default {
   providers: [
     Credentials({
@@ -13,9 +11,13 @@ export default {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        await connectDB();
+        console.log("start autorization");
 
-        const user = await User.findOne({ email: credentials.email });
+        const user = await prisma.user.findFirst({
+          where: { email: credentials.email as string },
+        });
+
+        console.log(user);
 
         if (!user) {
           throw new Error("Invalid credentials");
@@ -30,7 +32,7 @@ export default {
           throw new Error("Invalid credentials");
         }
 
-        return { id: user._id, name: user.name, email: user.email };
+        return user;
       },
     }),
   ],
