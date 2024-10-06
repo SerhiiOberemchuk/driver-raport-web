@@ -4,19 +4,30 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
+    console.log("Starting POST /api/register");
+
     const body = await request.json();
     const { email, password, lastName, name } = body;
 
-    if (!email || !password)
+    console.log("Received data:", body);
+
+    if (!email || !password) {
+      console.log("Missing email or password");
       return NextResponse.json({ message: "Bad Credentials" }, { status: 422 });
+    }
 
-    const existingUser = await prisma.user.findFirst({ where: { email } });
+    const existingUser = await prisma.user.findFirst({
+      where: { email },
+    });
 
-    if (existingUser)
+    console.log("Existing user:", existingUser);
+
+    if (existingUser) {
       return NextResponse.json(
         { message: "User with this email already exists" },
         { status: 400 }
       );
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -24,11 +35,14 @@ export async function POST(request: Request) {
       data: { name, lastName, email, password: hashedPassword },
     });
 
+    console.log("New user created:", user);
+
     return NextResponse.json(
       { user: { id: user.id, email: user.email } },
       { status: 201 }
     );
   } catch (error) {
-    return NextResponse.json(error, { status: 500 });
+    console.error("Error during registration:", error);
+    return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   }
 }
