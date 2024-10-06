@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { register } from "@/actions/register";
 import LoginRegisterForm from "@/components/LoginRegisterForm/LoginRegisterForm";
 import { UserDocument } from "@/models/User";
-import { toast } from "react-toastify";
+
 import { useNotifications } from "@toolpad/core";
 
 export default function Register() {
