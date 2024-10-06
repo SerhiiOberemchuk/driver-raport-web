@@ -20,16 +20,15 @@ function PageRegister() {
       });
       console.log(response);
 
-      // if (response.status === 200) {
-      //   notifications.show("Success!!!", { severity: "success" });
-      //   router.push("/login");
-      // } else if (response.data.error) {
-      //   notifications.show(response.data.error, { severity: "error" });
-      // }
+      if (response.status === 201) {
+        notifications.show("Success!!!", { severity: "success" });
+        router.push("/login");
+      } else if (response.data.error) {
+        notifications.show(response.data.error, { severity: "error" });
+      }
     } catch (error) {
       console.error("Error during registration:", error);
 
-      // Перевірка чи є у відповіді серверне повідомлення про помилку
       if (axios.isAxiosError(error) && error.response?.data?.error) {
         notifications.show(error.response.data.error, { severity: "error" });
       } else {

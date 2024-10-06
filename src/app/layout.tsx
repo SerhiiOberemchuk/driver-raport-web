@@ -11,6 +11,7 @@ import { SessionProvider, signOut, signIn } from "next-auth/react";
 
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { auth } from "@/auth";
+import Image from "next/image";
 
 const NAVIGATION: Navigation = [
   {
@@ -68,10 +69,11 @@ export default async function RootLayout({
   const BRANDING = {
     title: "My DRIVER APP",
     logo: (
-      <img
+      <Image
+        width={32}
+        height={32}
         src="https://mui.com/static/logo.svg"
         alt="MUI logo"
-        style={{ height: 24 }}
       />
     ),
   };
@@ -85,7 +87,7 @@ export default async function RootLayout({
               session={session}
               authentication={{ signIn, signOut }}
               navigation={NAVIGATION}
-              // branding={BRANDING}
+              branding={BRANDING}
             >
               <StyledEngineProvider injectFirst>
                 {children}
