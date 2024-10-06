@@ -8,8 +8,9 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import LayersIcon from "@mui/icons-material/Layers";
 import { type Navigation } from "@toolpad/core";
 import { SessionProvider, signOut, signIn } from "next-auth/react";
-import { auth } from "../auth";
+
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { auth } from "@/auth";
 
 const NAVIGATION: Navigation = [
   {

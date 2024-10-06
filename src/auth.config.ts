@@ -1,38 +1,36 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import User from "./models/User";
 import bcrypt from "bcryptjs";
 import { connectDB } from "./lib/mongodb";
-import User from "./models/User";
 
 export default {
   providers: [
     Credentials({
+      name: "Credentials",
       credentials: {
-        email: { label: "Email Address", type: "email" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(c) {
-        console.log("start authorize");
-
+      async authorize(credentials) {
         await connectDB();
 
-        const user = await User.findOne({
-          email: c?.email,
-        }).select("+password");
+        const user = await User.findOne({ email: credentials.email });
 
-        if (!user) throw new Error("Wrong Email or Password");
+        if (!user) {
+          throw new Error("Invalid credentials");
+        }
 
-        const passwordMatch = await bcrypt.compare(
-          c.password as string,
+        const isValidPassword = await bcrypt.compare(
+          credentials.password as string,
           user.password
         );
-        if (!passwordMatch) throw new Error("Wrong Email or Password");
 
-        return {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-        };
+        if (!isValidPassword) {
+          throw new Error("Invalid credentials");
+        }
+
+        return { id: user._id, name: user.name, email: user.email };
       },
     }),
   ],

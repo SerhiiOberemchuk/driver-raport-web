@@ -2,7 +2,7 @@ import * as React from "react";
 import type { AuthProvider } from "@toolpad/core";
 import { SignInPage } from "@toolpad/core/SignInPage";
 import { AuthError } from "next-auth";
-import { signIn } from "../../../auth";
+
 import {
   CustomButton,
   CustomEmailField,
@@ -10,6 +10,7 @@ import {
   // ForgotPasswordLink,
   SignUpLink,
 } from "@/components/customSignInFields";
+import { signIn } from "@/auth";
 
 export default function SignIn() {
   return (
@@ -18,18 +19,19 @@ export default function SignIn() {
       providers={[{ id: "credentials", name: "Email and Password" }]}
       signIn={async (
         provider: AuthProvider,
-        formData: FormData,
-        callbackUrl?: string
+        formData: FormData
+        // callbackUrl?: string
       ) => {
         "use server";
         try {
-          return await signIn(provider.id, {
+          await signIn(provider.id, {
             ...(formData && {
               email: formData.get("email"),
               password: formData.get("password"),
             }),
             redirectTo: "/",
           });
+          return { name: "serhii", email: "dfdfdfd" };
         } catch (error) {
           if (error instanceof Error && error.message === "NEXT_REDIRECT") {
             throw error;
@@ -39,7 +41,7 @@ export default function SignIn() {
             return {
               error:
                 error.type === "CredentialsSignin"
-                  ? "Invalid credentials."
+                  ? "Invalid credentials"
                   : "An error with Auth.js occurred.",
               type: error.type,
             };
