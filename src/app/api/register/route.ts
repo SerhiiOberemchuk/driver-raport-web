@@ -45,5 +45,5 @@ export async function POST(request: Request) {
   //   console.error("Error during registration:", error);
   //   return NextResponse.json({ message: "An error occurred" }, { status: 500 });
   // }
-  return NextResponse.json("response withiut prisma");
+  return NextResponse.json("response withiut prisma", request);
 }
